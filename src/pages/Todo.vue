@@ -1,5 +1,29 @@
 <template>
   <q-page class="q-pa-lg column">
+    <div class="row q-pa-sm bg-primary">
+
+      <q-input
+        v-model="newTask"
+        @keyup.enter="addTask"
+        class="col"
+        square
+        filled
+        bg-color="white"
+        placeholder="Add task"
+        dense
+        ref="addTaskBar"
+        >
+        <template v-slot:append>
+          <q-btn
+            @click="addTask"
+            round
+            dense
+            flat
+            icon="add" />
+        </template>
+      </q-input>
+
+    </div>
     <q-list
       separator
       bordered
@@ -7,7 +31,7 @@
       >
       <q-item
         v-for="(task, index) in tasks"
-        :key="task.tittle"
+        :key="task.title"
         v-ripple
         clickable
         @click="task.done = !task.done"
@@ -20,7 +44,7 @@
             color="primary" />
         </q-item-section>
         <q-item-section>
-          <q-item-label>{{ task.tittle}}</q-item-label>
+          <q-item-label>{{ task.title}}</q-item-label>
         </q-item-section>
         <q-item-section
           v-if="task.done"
@@ -38,6 +62,19 @@
 
       
     </q-list>
+    <div
+      v-if="!tasks.length"
+      class="no-tasks absolute-center"
+      style="opacity: 0.5">
+      <q-icon 
+        name="check"
+        size="100px"
+        color="primary"
+      />
+      <div class="text-h5 text-primary text-center">
+        No tasks
+      </div>
+    </div>
   </q-page>
 </template>
 
@@ -45,17 +82,18 @@
 export default {
   data(){
     return {
+      newTask: '',
       tasks: [
         {
-          tittle: 'Surasti bananą',
+          title: 'Surasti bananą',
           done: false
         },
         {
-          tittle: 'Suvalgyti bananą',
+          title: 'Suvalgyti bananą',
           done: false
         },
         {
-          tittle: 'Suvirškinti bananą',
+          title: 'Suvirškinti bananą',
           done: false
         }
 
@@ -66,20 +104,31 @@ export default {
     deleteTask(index, task){
       this.$q.dialog({
         title: 'Confirm',
-        message: 'Realy delete task "' + task.tittle + '" ?' ,
+        message: 'Realy delete task "' + task.title + '" ?' ,
         cancel: true,
         persistent: true
       }).onOk(() => {
         this.tasks.splice(index, 1)
         this.$q.notify({
           message: 'Task deleted',
-          position: 'center',
-          timeout: 500
+          type: 'info',
+          position: 'top',
+          timeout: 1000
           })
       })
 
+    },
+    addTask(){
+      this.tasks.push({
+        title: this.newTask,
+        done: false
+      })
+      this.newTask = ''
     }
   },
+  mounted(){
+    this.$refs.addTaskBar.$el.focus() //focus cursor in input field on page load
+  }
 }
 </script>
 
