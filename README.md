@@ -17,11 +17,12 @@ quasar dev
 ### Build the app for production
 
 ```bash
+
 quasar build //web,
 quasar dev -m android // for android app
 quasar build -m electron // for WIN
 ```
 
-### Customize the configuration
+### Customize the configurations
 
 See [Configuring quasar.conf.js](https://quasar.dev/quasar-cli/quasar-conf-js).
